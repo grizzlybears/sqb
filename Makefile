@@ -38,13 +38,11 @@ QemuPackDir=$(BuildRoot)/qemu-kvm-build
 
 none:
 	@echo "Usage:"
-	@echo "    To prepare qemu build env on centos  -->  make prepare_rh "
-	@echo "    To prepare build env on Fedora      -->  make prepare_fc "
 	@echo "    To build qemu          -->  make [Release=1]  qemu"
 	@echo "    To build spice then qemu with spice    -->  make [Release=1]  spiceqemu"
-	@echo "    To test qemu without install -->  Firt run 'make buildqemu' once,  then './testqemu.bash' as u like"
+	@echo "    To test qemu without install -->  Firt run 'make buildqemu' once,  then './test_run_qemu.sh' as u like"
 
-.PHONY: prepare_rh prepare_fc clean clean_spice remove_output
+.PHONY: clean  hard_clean remove_output
 
 all:qemu
 
@@ -156,23 +154,6 @@ $(QemuMakefile):$(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-slirp --disable-user \
 	--disable-seccomp --disable-libiscsi --disable-virtfs --disable-libnfs
 
-prepare_rh:
-	sudo yum install -y gcc gcc-c++  gdb gdb-doc binutils binutils-devel make automake autoconf  libtool nasm nasm-doc pyparsing  tunctl
-	sudo yum install -y openssl-devel gnutls-devel nss-devel  cyrus-sasl-devel libssh-devel  valgrind-devel libcurl-devel
-	sudo yum install -y libpng-devel freetype-devel libogg-devel libXrandr-devel SDL-devel libXfixes-devel alsa-lib-devel pulseaudio-libs-devel 
-	sudo yum install -y libxml2-devel neon libcap-ng-devel numactl-devel libaio-devel
-	sudo yum install -y lvm2 yajl-devel polkit libnl3-devel iscsi-initiator-utils parted-devel libudev-devel libpciaccess-devel device-mapper-multipath
-	sudo yum install -y celt051-devel pixman-devel libjpeg-turbo-devel 
-	sudo yum install -y texi2html texinfo   # for qemu --enable-doc
-	sudo yum install -y xz wget qemu-image # for downloading cloud base image
-	sudo yum install -y python-six         # for spice-common code gen
-
-
-prepare_fc: prepare_rh
-	sudo yum install -y spice-gtk-tools # to  open VM spice console
-	# These are for building spice-gtk
-	# sudo yum install -y gtk3-devel gobject-introspection-devel libgudev1-devel vala vala-tools gtk-doc perl-Text-CSV libcacard-devel libcacard-tools 
-
 spiceserver:$(SpiceServerLib)
 
 $(SpiceServerLib):$(SpiceServerMakefile) 
@@ -206,7 +187,7 @@ $(SpiceProtocolSrc)/configure:
 	cd $(SpiceProtocolSrc); \
     NOCONFIGURE=1 ./autogen.sh 
 
-clean:clean_spice clean_qemu clean_libvirt remove_output clean_spicy
+clean:clean_spice clean_qemu remove_output clean_spicy
 
 clean_spice:
 	$(MAKE) -C $(SpiceServerSrc) clean ; exit 0
@@ -219,4 +200,9 @@ clean_qemu:
 remove_output:
 	rm -fr bin include lib share sbin man $(QemuPackDir) 
 
+hard_clean:remove_output 
+	cd spice; git clean -xdf
+	cd spice/spice-common; git clean -xdf
+	cd spice-protocol;git clean -xdf
+	cd qemu; git clean -xdf
 

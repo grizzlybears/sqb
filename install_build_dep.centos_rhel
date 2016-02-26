@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+
+if ! yum repolist | grep epel
+then
+  echo "We need 'epel' repo."
+  exit 1
+fi
+
+./install_build_dep.fedora

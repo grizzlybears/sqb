@@ -1,0 +1,14 @@
+#!/bin/bash 
+
+sudo yum install -y gcc gcc-c++  gdb gdb-doc binutils binutils-devel make automake autoconf  libtool nasm nasm-doc  tunctl
+sudo yum install -y openssl-devel gnutls-devel nss-devel  cyrus-sasl-devel libssh-devel  valgrind-devel libcurl-devel
+sudo yum install -y libpng-devel freetype-devel libogg-devel libXrandr-devel SDL-devel libXfixes-devel alsa-lib-devel pulseaudio-libs-devel 
+sudo yum install -y libxml2-devel neon libcap-ng-devel numactl-devel libaio-devel
+sudo yum install -y lvm2 yajl-devel polkit libnl3-devel iscsi-initiator-utils parted-devel libudev-devel libpciaccess-devel device-mapper-multipath
+sudo yum install -y celt051-devel pixman-devel libjpeg-turbo-devel 
+sudo yum install -y texi2html texinfo   # for qemu --enable-doc
+sudo yum install -y xz wget qemu-image # for downloading cloud base image
+sudo yum install -y pyparsing python-six         # for spice-common code gen
+
+sudo yum install -y spice-gtk-tools # to  open VM spice console
+
