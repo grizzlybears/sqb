@@ -3,7 +3,7 @@
 	url = git://anongit.freedesktop.org/spice/spice
 [submodule "qemu"]
 	path = qemu
-	url = git@git.oschina.net:grizzlybears/qemu.git
+	url = git://git.qemu.org/qemu.git
 [submodule "spice-protocol"]
 	path = spice-protocol
     url = git://anongit.freedesktop.org/spice/spice-protocol
