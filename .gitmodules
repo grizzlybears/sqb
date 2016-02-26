@@ -1,9 +1,10 @@
 [submodule "spice"]
 	path = spice
-	url = ../vdi/spice
+	url = git://anongit.freedesktop.org/spice/spice
 [submodule "qemu"]
 	path = qemu
-	url = ../vdi/qemu
+	url = git@git.oschina.net:grizzlybears/qemu.git
 [submodule "spice-protocol"]
 	path = spice-protocol
-	url = ../vdi/spice-protocol
+    url = git://anongit.freedesktop.org/spice/spice-protocol
+
