@@ -165,7 +165,7 @@ prepare_rh:
 	sudo yum install -y lvm2 yajl-devel polkit libnl3-devel iscsi-initiator-utils parted-devel libudev-devel libpciaccess-devel device-mapper-multipath
 	sudo yum install -y celt051-devel pixman-devel libjpeg-turbo-devel 
 	sudo yum install -y texi2html texinfo   # for qemu --enable-doc
-	sudo yum install -y xz wget qemu-image # for downloading cloud base image
+	sudo yum install -y xz wget qemu-img # for downloading cloud base image
 
 
 prepare_fc: prepare_rh
