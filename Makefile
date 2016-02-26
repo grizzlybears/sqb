@@ -29,7 +29,7 @@ SpiceProtocolHeader=$(SpiceProtocolDir)/spice/protocol.h
 SpiceProtocolSrc=$(BuildRoot)/spice-protocol
 SpiceProtocolMakefile=$(SpiceProtocolSrc)/Makefile 
 
-SpiceProtocolPc=$(BuildRoot)/lib/pkgconfig/spice-protocol.pc
+SpiceProtocolPc=$(BuildRoot)/share/pkgconfig/spice-protocol.pc
 
 QemuSrc=$(BuildRoot)/qemu
 QemuExe=$(QemuSrc)/x86_64-softmmu/qemu-system-x86_64
@@ -77,7 +77,6 @@ installqemu:$(QemuExe)
 	sudo make -C $(QemuSrc) install
 
 
-$(QemuExe):  $(QemuMakefile)
 	make -C $(QemuSrc)
 
 config_qemu: $(QemuMakefile)
@@ -166,6 +165,7 @@ prepare_rh:
 	sudo yum install -y celt051-devel pixman-devel libjpeg-turbo-devel 
 	sudo yum install -y texi2html texinfo   # for qemu --enable-doc
 	sudo yum install -y xz wget qemu-image # for downloading cloud base image
+	sudo yum install -y python-six         # for spice-common code gen
 
 
 prepare_fc: prepare_rh
@@ -180,7 +180,7 @@ $(SpiceServerLib):$(SpiceServerMakefile)
 
 $(SpiceServerMakefile):  $(SpiceProtocolHeader) $(SpiceServerSrc)/configure
 	cd $(SpiceServerSrc); \
-	SPICE_PROTOCOL_CFLAGS="-I $(SpiceProtocolDir)" \
+	PKG_CONFIG_PATH="$(BuildRoot)/share/pkgconfig" \
 	CFLAGS="-fPIC $(DebugOpt) $(PgOpt)" CXXFLAGS="-fPIC $(DebugOpt) $(PgOpt) " LIBS="-lpthread" \
 	./configure --prefix="$(BuildRoot)" \
 	    --enable-shared=no \
