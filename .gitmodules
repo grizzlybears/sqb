@@ -1,0 +1,6 @@
+[submodule "spice"]
+	path = spice
+	url = ../vdi/spice
+[submodule "qemu"]
+	path = qemu
+	url = ../vdi/qemu
