@@ -4,3 +4,6 @@
 [submodule "qemu"]
 	path = qemu
 	url = ../vdi/qemu
+[submodule "spice-protocol"]
+	path = spice-protocol
+	url = ../vdi/spice-protocol
