@@ -8,12 +8,13 @@ else
 endif
 
 
-ifneq (,$(findstring  Red,$(shell gcc --version | head -n1))) 
-	# on rh famaly, trace default to 'dtrace'   , same as rhqemu
-	TraceQemuOpt= --enable-trace-backend=dtrace
-else
-	TraceQemuOpt= --enable-trace-backend=simple
-endif
+#ifneq (,$(findstring  Red,$(shell gcc --version | head -n1))) 
+#	# on rh famaly, trace can be 'dtrace'   , same as rhqemu
+#	#
+#	TraceQemuOpt= --enable-trace-backend=dtrace
+#else
+#	TraceQemuOpt= --enable-trace-backend=simple
+#endif
 
 
 SpiceStatSrc=$(BuildRoot)/spice-stat
@@ -51,6 +52,9 @@ buildqemu:$(QemuExe)
 	make -C $(QemuSrc) install DESTDIR="$(QemuPackDir)"
 
 qemu:$(QemuExe)
+
+$(QemuExe):  $(QemuMakefile)
+	make -C $(QemuSrc)
 
 spiceqemu: ${SpiceServerMakefile} ${QemuMakefile}
 	make -C ${SpiceServerSrc} install
@@ -122,7 +126,7 @@ StaticSpiceLdFlags=-lrt -lglib-2.0 -pthread -lpixman-1 -lcelt051 -lm -lssl -lcry
 
 $(QemuMakefile):$(SpiceProtocolPc) $(SpiceServerLib)  
 	cd $(QemuSrc); \
-	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig" \
+	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/share/pkgconfig" \
 	./configure \
 	--target-list="x86_64-softmmu" \
 	--prefix=$(OurPrefix) --localstatedir=$(OurPrefix)/var --sysconfdir=$(OurPrefix)/etc \
@@ -145,7 +149,7 @@ $(QemuMakefile):$(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-vde \
 	--enable-linux-aio \
 	--enable-kvm  \
-	--enable-spice --enable-usb-redir --enable-libusb \
+	--enable-spice \
 	$(TraceQemuOpt) \
 	--disable-smartcard-nss  \
 	--disable-glusterfs \
@@ -153,6 +157,9 @@ $(QemuMakefile):$(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-guest-agent \
 	--disable-slirp --disable-user \
 	--disable-seccomp --disable-libiscsi --disable-virtfs --disable-libnfs
+
+#centos6 doesnt have libusb-1.0.13+ , neither usbredir-0.6+ , let's turn off themfor now
+# --enable-usb-redir --enable-libusb 
 
 spiceserver:$(SpiceServerLib)
 
