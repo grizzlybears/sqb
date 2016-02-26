@@ -164,11 +164,13 @@ prepare_rh:
 	sudo yum install -y libxml2-devel neon libcap-ng-devel numactl-devel libaio-devel
 	sudo yum install -y lvm2 yajl-devel polkit libnl3-devel iscsi-initiator-utils parted-devel libudev-devel libpciaccess-devel device-mapper-multipath
 	sudo yum install -y celt051-devel pixman-devel libjpeg-turbo-devel 
-	sudo yum install -y texi2html texinfo   # for qemu --enable-doc要用到
+	sudo yum install -y texi2html texinfo   # for qemu --enable-doc
+	sudo yum install -y xz wget qemu-image # for downloading cloud base image
 
 
 prepare_fc: prepare_rh
-	# These are for spice-gtk
+	sudo yum install -y spice-gtk-tools # to  open VM spice console
+	# These are for building spice-gtk
 	# sudo yum install -y gtk3-devel gobject-introspection-devel libgudev1-devel vala vala-tools gtk-doc perl-Text-CSV libcacard-devel libcacard-tools 
 
 spiceserver:$(SpiceServerLib)

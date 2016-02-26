@@ -4,14 +4,14 @@ PWD=`pwd`
 QEMU="$PWD/qemu/x86_64-softmmu/qemu-system-x86_64 -enable-kvm -L $PWD/qemu-kvm-build/opt/sqb/share/qemu -nodefconfig -nodefaults"
 SpicePort="6600"
 Nic1Mac="52:54:00:cd:62:1a"
-VmName=Fedora22
+VmName=F23
 
 Spicy="spicy"
 
 
 MachineSpec=" -smp 2,sockets=1,cores=2,threads=1 -m 1024"
 
-HdImage="/home/grizzlybears/vms/F22.qcow2"
+HdImage="$PWD/vm_images/f23.qcow2"
 
 HdOpt=" -drive if=virtio,cache.direct=on,aio=native,file=$HdImage"
 
