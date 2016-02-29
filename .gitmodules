@@ -8,3 +8,9 @@
 	path = spice-protocol
     url = git://anongit.freedesktop.org/spice/spice-protocol
 
+[submodule "libusbx"]
+	path = libusbx
+	url = https://github.com/libusb/libusb.git
+[submodule "usbredir"]
+	path = usbredir
+	url = git://anongit.freedesktop.org/spice/usbredir
