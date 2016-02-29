@@ -20,10 +20,8 @@ DisplayOpt=" -spice port=${SpicePort},addr=0.0.0.0,disable-ticketing,seamless-mi
 
 UsbOpt=" -usb -readconfig $PWD/qemu/docs/ich9-ehci-uhci.cfg "  # enable the USB driver & create both  usb1.1 and usb2.0 bus
 #
-#centos6 doesnt have libusb-1.0.13+ , neither usbredir-0.6+ , let's turn off themfor now
-#
-#Redir1=" -chardev spicevmc,id=charredir0,name=usbredir -device usb-redir,chardev=charredir0,id=redir0"
-#Redir2=" -chardev spicevmc,id=charredir1,name=usbredir -device usb-redir,chardev=charredir1,id=redir1"
+Redir1=" -chardev spicevmc,id=charredir0,name=usbredir -device usb-redir,chardev=charredir0,id=redir0"
+Redir2=" -chardev spicevmc,id=charredir1,name=usbredir -device usb-redir,chardev=charredir1,id=redir1"
 
 RedirOpt=" ${Redir1} ${Redir2} ${Redir3} ${Redir4}  ${Redir5} $UsbPass1"
 
