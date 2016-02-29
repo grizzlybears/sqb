@@ -24,10 +24,10 @@ ENV
 
 Show me howto
 -------------
-1.  make prepare_rh     # install the build deps
-2.  ./autogen.sh        # get src code , and test image
-3.  make spiceqemu
-4.  ./test_run_qemu.sh
+1.  `./install_build_dep.${Distro}`   # '1-shot step', install the build deps
+2.  `./autogen.sh`                    # '1-shot setp', git clone for src code , and download test image
+3.  `make spiceqemu`        # for sure, you can hack somewhere in src code, and build&run to verify.
+4.  `./test_run_qemu.sh`    # as much asyou like :)
 
 
 Good luck :)
