@@ -3,7 +3,7 @@ Spice Qemu Builder
 
 Short story
 -----------
-    Build and run 'qemu' with 'spice' on the fly.
+    Build and run 'qemu' with 'spice' from source on the fly.
 
 A bit longer
 ------------

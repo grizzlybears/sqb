@@ -1,11 +1,11 @@
 #!/bin/bash -e
 
 git submodule sync
-git submodule update  --init spice qemu spice-protocol
+git submodule update  --init spice qemu spice-protocol libusbx
 
 pushd .
 echo "###########################################################"
-echo "####  goto autogen spice-protocol:                              ####"
+echo "####  goto autogen spice-protocol:                     ####"
 echo "###########################################################"
 cd spice-protocol 
 NOCONFIGURE=1 ./autogen.sh
@@ -19,6 +19,15 @@ echo "###########################################################"
 cd spice
 NOCONFIGURE=1 ./autogen.sh
 popd
+
+pushd .
+echo "###########################################################"
+echo "####  goto autogen libusb                              ####"
+echo "###########################################################"
+cd libusbx
+NOCONFIGURE=1 ./autogen.sh
+popd
+
 
 pushd .
 echo "###########################################################"

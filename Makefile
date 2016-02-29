@@ -37,6 +37,11 @@ QemuExe=$(QemuSrc)/x86_64-softmmu/qemu-system-x86_64
 QemuMakefile=$(QemuSrc)/config-host.mak
 QemuPackDir=$(BuildRoot)/qemu-kvm-build
 
+UsbLib=$(BuildRoot)/lib/libusb-1.0.a
+UsbSrc=$(BuildRoot)/libusbx
+UsbMakefile=$(UsbSrc)/Makefile
+UsbPc=$(BuildRoot)/lib/libusb-1.0.pc
+
 none:
 	@echo "Usage:"
 	@echo "    To build qemu          -->  make [Release=1]  qemu"
@@ -124,7 +129,7 @@ endif
 
 StaticSpiceLdFlags=-lrt -lglib-2.0 -pthread -lpixman-1 -lcelt051 -lm -lssl -lcrypto -Wl,-z,relro -ldl -lz -lgssapi_krb5 -lkrb5 -lcom_err -lk5crypto -lsasl2 -ljpeg
 
-$(QemuMakefile):$(SpiceProtocolPc) $(SpiceServerLib)  
+$(QemuMakefile):$(UsbPc) $(SpiceProtocolPc) $(SpiceServerLib)  
 	cd $(QemuSrc); \
 	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/share/pkgconfig" \
 	./configure \
@@ -149,7 +154,7 @@ $(QemuMakefile):$(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-vde \
 	--enable-linux-aio \
 	--enable-kvm  \
-	--enable-spice \
+	--enable-spice --enable-libusb \
 	$(TraceQemuOpt) \
 	--disable-smartcard-nss  \
 	--disable-glusterfs \
@@ -194,7 +199,21 @@ $(SpiceProtocolSrc)/configure:
 	cd $(SpiceProtocolSrc); \
     NOCONFIGURE=1 ./autogen.sh 
 
-clean:clean_spice clean_qemu remove_output clean_spicy
+$(UsbPc):$(UsbMakefile)
+	$(MAKE) -C $(UsbSrc) install
+
+$(UsbLib):$(UsbMakefile)
+	$(MAKE) -C $(UsbSrc) install
+
+$(UsbMakefile):$(UsbSrc)/configure
+	cd $(UsbSrc); \
+    CFLAGS="-fPIC" CXXFLAGS="-fPIC" ./configure --prefix="$(BuildRoot)" --enable-shared=no
+
+$(UsbSrc)/configure:
+	cd $(UsbSrc); \
+	NOCONFIGURE=1 ./autogen.sh
+
+clean:clean_spice clean_qemu remove_output
 
 clean_spice:
 	$(MAKE) -C $(SpiceServerSrc) clean ; exit 0
@@ -212,4 +231,5 @@ hard_clean:remove_output
 	cd spice/spice-common; git clean -xdf
 	cd spice-protocol;git clean -xdf
 	cd qemu; git clean -xdf
+	cd libusbx; git clean -xdf
 
