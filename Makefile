@@ -42,6 +42,11 @@ UsbSrc=$(BuildRoot)/libusbx
 UsbMakefile=$(UsbSrc)/Makefile
 UsbPc=$(BuildRoot)/lib/libusb-1.0.pc
 
+UsbRedirLib=$(BuildRoot)/lib/libusbredirparser.a
+UsbRedirSrc=$(BuildRoot)/usbredir
+UsbRedirMakefile=$(UsbRedirSrc)/Makefile
+UsbRedirPc=$(BuildRoot)/lib/libusbredirparser.pc
+
 none:
 	@echo "Usage:"
 	@echo "    To build qemu          -->  make [Release=1]  qemu"
@@ -129,7 +134,7 @@ endif
 
 StaticSpiceLdFlags=-lrt -lglib-2.0 -pthread -lpixman-1 -lcelt051 -lm -lssl -lcrypto -Wl,-z,relro -ldl -lz -lgssapi_krb5 -lkrb5 -lcom_err -lk5crypto -lsasl2 -ljpeg
 
-$(QemuMakefile):$(UsbPc) $(SpiceProtocolPc) $(SpiceServerLib)  
+$(QemuMakefile):$(UsbPc) $(UsbRedirPc) $(SpiceProtocolPc) $(SpiceServerLib)  
 	cd $(QemuSrc); \
 	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/share/pkgconfig" \
 	./configure \
@@ -154,7 +159,7 @@ $(QemuMakefile):$(UsbPc) $(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-vde \
 	--enable-linux-aio \
 	--enable-kvm  \
-	--enable-spice --enable-libusb \
+	--enable-spice --enable-usb-redir --enable-libusb \
 	$(TraceQemuOpt) \
 	--disable-smartcard-nss  \
 	--disable-glusterfs \
@@ -163,8 +168,6 @@ $(QemuMakefile):$(UsbPc) $(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-slirp --disable-user \
 	--disable-seccomp --disable-libiscsi --disable-virtfs --disable-libnfs
 
-#centos6 doesnt have libusb-1.0.13+ , neither usbredir-0.6+ , let's turn off themfor now
-# --enable-usb-redir --enable-libusb 
 
 spiceserver:$(SpiceServerLib)
 
@@ -213,6 +216,22 @@ $(UsbSrc)/configure:
 	cd $(UsbSrc); \
 	NOCONFIGURE=1 ./autogen.sh
 
+$(UsbRedirPc):$(UsbRedirMakefile)
+	$(MAKE) -C $(UsbRedirSrc) install
+
+$(UsbRedirLib):$(UsbRedirMakefile)
+	$(MAKE) -C $(UsbRedirSrc) install
+
+$(UsbRedirMakefile):$(UsbRedirSrc)/configure $(UsbPc) 
+	cd $(UsbRedirSrc); \
+	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig" \
+    CFLAGS="-fPIC" CXXFLAGS="-fPIC" ./configure --prefix="$(BuildRoot)" --enable-shared=no
+
+$(UsbRedirSrc)/configure:
+	cd $(UsbRedirSrc); \
+	NOCONFIGURE=1 ./autogen.sh
+
+
 clean:clean_spice clean_qemu remove_output
 
 clean_spice:
@@ -232,4 +251,5 @@ hard_clean:remove_output
 	cd spice-protocol;git clean -xdf
 	cd qemu; git clean -xdf
 	cd libusbx; git clean -xdf
+	cd usbredir; git clean -xdf
 
