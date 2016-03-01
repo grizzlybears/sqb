@@ -20,7 +20,7 @@ A bit longer
 
 ENV
 ----
-  At this time, 'sqb' only rocks on RHEL/CentOs/Fedora. Porting to other distro should also by easy.
+  At this time, 'sqb' only rocks on CentOs/Fedora. Porting to other distro should also by easy.
 
 Show me howto
 -------------
