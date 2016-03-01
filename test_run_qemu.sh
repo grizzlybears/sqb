@@ -18,6 +18,8 @@ HdOpt=" -drive if=virtio,cache.direct=on,aio=native,file=$HdImage"
 
 DisplayOpt=" -spice port=${SpicePort},addr=0.0.0.0,disable-ticketing,seamless-migration=on"
 
+VncOpt=" -vnc 0.0.0.0:0,websocket=5700"
+
 UsbOpt=" -usb -readconfig $PWD/qemu/docs/ich9-ehci-uhci.cfg "  # enable the USB driver & create both  usb1.1 and usb2.0 bus
 #
 Redir1=" -chardev spicevmc,id=charredir0,name=usbredir -device usb-redir,chardev=charredir0,id=redir0"
