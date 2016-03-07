@@ -1,0 +1,11 @@
+#!/bin/bash 
+
+bridge="virbr0"
+iface=$1
+
+brctl delif $bridge $iface
+
+ip link set $iface down
+
+#tunctl -d $iface
+

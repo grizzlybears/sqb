@@ -3,6 +3,8 @@
 PWD=`pwd`
 QEMU="$PWD/qemu/x86_64-softmmu/qemu-system-x86_64 -enable-kvm -L $PWD/qemu-kvm-build/opt/sqb/share/qemu -nodefconfig -nodefaults"
 SpicePort="6600"
+VncPort="0"
+VncWsPort="5700"
 Nic1Mac="52:54:00:cd:62:1a"
 VmName=F23
 
@@ -16,9 +18,11 @@ HdImage="$PWD/vm_images/f23.qcow2"
 HdOpt=" -drive if=virtio,cache.direct=on,aio=native,file=$HdImage"
 
 
-DisplayOpt=" -spice port=${SpicePort},addr=0.0.0.0,disable-ticketing,seamless-migration=on"
+SpiceOpt=" -spice port=${SpicePort},addr=0.0.0.0,disable-ticketing,seamless-migration=on"
 
-VncOpt=" -vnc 0.0.0.0:0,websocket=5700"
+VncOpt=" -vnc 0.0.0.0:$VncPort,websocket=$VncWsPort"
+
+DisplayOpt="$SpiceOpt $VncOpt"
 
 UsbOpt=" -usb -readconfig $PWD/qemu/docs/ich9-ehci-uhci.cfg "  # enable the USB driver & create both  usb1.1 and usb2.0 bus
 #
@@ -46,9 +50,13 @@ AudioOpt=" -device intel-hda,id=sound0 -device hda-duplex,id=sound0-codec0,bus=s
 Nic1=" -netdev  tap,id=nic1,script=$PWD/qemu-ifup,downscript=$PWD/qemu-ifdown -device virtio-net-pci,netdev=nic1,mac=$Nic1Mac"
 NetOptNone=" -net none"
 
-#we will give guest network later.
-#NetOpt=" $Nic1 "
-NetOpt=" $NetOptNone"
+#probe if we can use the 'default network' of libvirt.
+if ip link show virbr0
+then
+    NetOpt=" $Nic1"
+else
+    NetOpt=" $NetOptNone"
+fi
 
 # linux guests    use '-rtc base=utc,'
 # while windows guests need '-rtc=localtime'
@@ -75,11 +83,14 @@ sudo echo "let's go"
 #sudo  SPICE_DEBUG_LEVEL=2  LD_PRELOAD=libkeepalive.so KEEPIDLE=60 KEEPINTVL=60 KEEPCNT=5 \
 
 cmd_line=" $QEMU $MachineSpec $HdOpt  \
- $VirtioSerialOpt $DisplayOpt $VncOpt $VgaOpt $AudioOpt \
+ $VirtioSerialOpt $DisplayOpt $VgaOpt $AudioOpt \
  $UsbOpt $RedirOpt $InputOpt $NetOpt $OtherOpt $TraceOpt $MonOpt $QmpOpt"
 
 #echo $cmd_line
 sudo  SPICE_DEBUG_LEVEL=2 $cmd_line &
 
 sleep 1
+
+sudo chmod a+w $PWD/dig_into/qmon_$VmName
+
 $Spicy -h localhost -p ${SpicePort} &

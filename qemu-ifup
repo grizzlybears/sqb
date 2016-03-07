@@ -1,0 +1,13 @@
+#!/bin/bash 
+
+
+#make sure the bridge exists, either by "brctl addbr xxx" or "/etc/network/interfaces" or ovs operations !
+
+bridge="virbr0"   # we plug our tap if on  libvirtd 'default network' :)
+iface=$1
+
+ip link set $iface up promisc on mtu 1600  
+sleep 1
+brctl addif $bridge $iface 
+
+
