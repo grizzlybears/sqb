@@ -40,12 +40,12 @@ QemuPackDir=$(BuildRoot)/qemu-kvm-build
 UsbLib=$(BuildRoot)/lib/libusb-1.0.a
 UsbSrc=$(BuildRoot)/libusbx
 UsbMakefile=$(UsbSrc)/Makefile
-UsbPc=$(BuildRoot)/lib/libusb-1.0.pc
+UsbPc=$(BuildRoot)/lib/pkgconfig/libusb-1.0.pc
 
 UsbRedirLib=$(BuildRoot)/lib/libusbredirparser.a
 UsbRedirSrc=$(BuildRoot)/usbredir
 UsbRedirMakefile=$(UsbRedirSrc)/Makefile
-UsbRedirPc=$(BuildRoot)/lib/libusbredirparser.pc
+UsbRedirPc=$(BuildRoot)/lib/pkgconfig/libusbredirparser-0.5.pc
 
 none:
 	@echo "Usage:"
