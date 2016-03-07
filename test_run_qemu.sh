@@ -20,7 +20,11 @@ HdOpt=" -drive if=virtio,cache.direct=on,aio=native,file=$HdImage"
 
 SpiceOpt=" -spice port=${SpicePort},addr=0.0.0.0,disable-ticketing,seamless-migration=on"
 
-VncOpt=" -vnc 0.0.0.0:$VncPort,websocket=$VncWsPort"
+# vnc web socket requires  "gnutls >= 2.9.10", which is not available natively on CentOS 6.
+# so we turn it off for now.
+#VncOpt=" -vnc 0.0.0.0:$VncPort,websocket=$VncWsPort"
+VncOpt=" -vnc 0.0.0.0:$VncPort"
+#
 
 DisplayOpt="$SpiceOpt $VncOpt"
 
