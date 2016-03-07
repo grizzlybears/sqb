@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 git submodule sync
-git submodule update  --init spice qemu spice-protocol libusbx
+git submodule update  --init spice qemu spice-protocol libusbx usbredir
 
 pushd .
 echo "###########################################################"
