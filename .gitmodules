@@ -1,16 +1,16 @@
 [submodule "spice"]
 	path = spice
-	url = git://anongit.freedesktop.org/spice/spice
+	url = ../spice.git
 [submodule "qemu"]
 	path = qemu
-	url = git://git.qemu.org/qemu.git
+	url = ../qemu.git
 [submodule "spice-protocol"]
 	path = spice-protocol
-    url = git://anongit.freedesktop.org/spice/spice-protocol
+    url = ../spice-protocol.git
 
 [submodule "libusbx"]
 	path = libusbx
-	url = https://github.com/libusb/libusb.git
+	url = ../libusbx.git
 [submodule "usbredir"]
 	path = usbredir
-	url = git://anongit.freedesktop.org/spice/usbredir
+	url = ../usbredir
