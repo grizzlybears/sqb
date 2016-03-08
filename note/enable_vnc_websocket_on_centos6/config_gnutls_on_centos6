@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+#if  'configure'  without spec --prefix
+#  libnettle ==> /usr/local/lib64/pkgconfig
+#  gnutls    ==> /usr/local/lib/pkgconfig
+
+PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig ./configure --with-included-libtasn1 --without-p11-kit --without-tpm
+

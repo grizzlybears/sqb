@@ -22,8 +22,8 @@ SpiceOpt=" -spice port=${SpicePort},addr=0.0.0.0,disable-ticketing,seamless-migr
 
 # vnc web socket requires  "gnutls >= 2.9.10", which is not available natively on CentOS 6.
 # so we turn it off for now.
-#VncOpt=" -vnc 0.0.0.0:$VncPort,websocket=$VncWsPort"
-VncOpt=" -vnc 0.0.0.0:$VncPort"
+VncOpt=" -vnc 0.0.0.0:$VncPort,websocket=$VncWsPort"
+#VncOpt=" -vnc 0.0.0.0:$VncPort"
 #
 
 DisplayOpt="$SpiceOpt $VncOpt"
@@ -90,8 +90,10 @@ cmd_line=" $QEMU $MachineSpec $HdOpt  \
  $VirtioSerialOpt $DisplayOpt $VgaOpt $AudioOpt \
  $UsbOpt $RedirOpt $InputOpt $NetOpt $OtherOpt $TraceOpt $MonOpt $QmpOpt"
 
+lib_path=/usr/local/lib:/usr/local/lib64:$LD_LIBRARY_PATH
+
 #echo $cmd_line
-sudo  SPICE_DEBUG_LEVEL=2 $cmd_line &
+sudo  SPICE_DEBUG_LEVEL=2 LD_LIBRARY_PATH=$lib_path  $cmd_line &
 
 sleep 1
 

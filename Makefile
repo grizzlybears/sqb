@@ -134,9 +134,14 @@ endif
 
 StaticSpiceLdFlags=-lrt -lglib-2.0 -pthread -lpixman-1 -lcelt051 -lm -lssl -lcrypto -Wl,-z,relro -ldl -lz -lgssapi_krb5 -lkrb5 -lcom_err -lk5crypto -lsasl2 -ljpeg
 
+
+#
+#  assume u have source-made  gnunettle and gnutls at
+EXTRA_PKG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig
+
 $(QemuMakefile):$(UsbPc) $(UsbRedirPc) $(SpiceProtocolPc) $(SpiceServerLib)  
 	cd $(QemuSrc); \
-	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/share/pkgconfig" \
+	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/share/pkgconfig:$(EXTRA_PKG_PATH)" \
 	./configure \
 	--target-list="x86_64-softmmu" \
 	--prefix=$(OurPrefix) --localstatedir=$(OurPrefix)/var --sysconfdir=$(OurPrefix)/etc \
@@ -153,6 +158,7 @@ $(QemuMakefile):$(UsbPc) $(UsbRedirPc) $(SpiceProtocolPc) $(SpiceServerLib)
 	--disable-sdl --disable-gtk \
 	--disable-curses  \
 	--disable-libssh2 --disable-curl \
+        --enable-gnutls \
 	--enable-vnc --enable-vnc-sasl --enable-vnc-tls \
 	--disable-brlapi --disable-bluez \
 	--enable-docs \

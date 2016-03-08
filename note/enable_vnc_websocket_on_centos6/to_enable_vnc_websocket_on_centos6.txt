@@ -1,0 +1,14 @@
+0. install build dep
+
+1. get source tarball
+  gnutls-3.4.10.tar.xz
+  nettle-3.2.tar.gz
+
+2. install nettle
+  ./configure
+  make
+  sudo make install
+ 
+3. install gnutls
+  PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig ./configure --with-included-libtasn1 --without-p11-kit --without-tpm
+
