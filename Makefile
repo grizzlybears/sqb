@@ -132,23 +132,27 @@ ifeq (,$(OurPrefix))
   OurPrefix=/opt/sqb
 endif
 
+MyPkgDir=$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/lib64/pkgconfig:$(BuildRoot)/share/pkgconfig
+
 StaticSpiceLdFlags=-lrt -lglib-2.0 -pthread -lpixman-1 -lcelt051 -lm -lssl -lcrypto -Wl,-z,relro -ldl -lz -lgssapi_krb5 -lkrb5 -lcom_err -lk5crypto -lsasl2 -ljpeg
 
+StaticGnuTlsFlags=$(shell PKG_CONFIG_PATH=$(MyPkgDir)  pkg-config --libs --static gnutls nettle) -lhogweed
 
 #
 #  assume u have source-made  gnunettle and gnutls at
-EXTRA_PKG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig
+#EXTRA_PKG_PATH=/usr/local/lib/pkgconfig:/usr/local/lib64/pkgconfig
 
 $(QemuMakefile):$(UsbPc) $(UsbRedirPc) $(SpiceProtocolPc) $(SpiceServerLib)  
 	cd $(QemuSrc); \
-	PKG_CONFIG_PATH="$(BuildRoot)/lib/pkgconfig:$(BuildRoot)/share/pkgconfig:$(EXTRA_PKG_PATH)" \
+	echo "gnutls: $(StaticGnuTlsFlags)"; \
+	PKG_CONFIG_PATH="$(MyPkgDir):$(EXTRA_PKG_PATH)" \
 	./configure \
 	--target-list="x86_64-softmmu" \
 	--prefix=$(OurPrefix) --localstatedir=$(OurPrefix)/var --sysconfdir=$(OurPrefix)/etc \
 	--audio-drv-list='pa,alsa,oss'  \
 	--disable-strip \
 	--extra-cflags="$(RhQemuCFlags) -DVdiVer=$(VdiVer) " \
-	--extra-ldflags="$(RhQemuLdFlags) $(StaticSpiceLdFlags) -ludev" \
+	--extra-ldflags="$(RhQemuLdFlags) $(StaticSpiceLdFlags) $(StaticGnuTlsFlags) -ludev" \
 	--disable-xen \
 	--block-drv-rw-whitelist=qcow2,raw,file,host_device,host_cdrom,qed,gluster,rbd \
 	--block-drv-ro-whitelist=vmdk,vhdx,vpc \
